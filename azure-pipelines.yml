@@ -1,5 +1,5 @@
 trigger:
-- main
+  - main
 
 variables:
   imageNameBackend: "subscription_management-backend"
@@ -8,53 +8,48 @@ variables:
   tag: '$(Build.BuildId)'
 
 stages:
-  - stage: Build
-    displayName: "Build and Push Stage"
-    jobs:
-      - job: BuildAndPush
-        pool:
-          name: 'Default' # Points to your WSL Agent
-        steps:
-          - checkout: self
+- stage: Build
+  displayName: "Build and Push Stage"
+  jobs:
+  - job: BuildAndPush
+    pool:
+      name: 'Default' # Your WSL Agent
+    steps:
+    - checkout: self
 
-          - task: NodeTool@0
-            inputs:
-              versionSpec: '20.x'
-            displayName: 'Install Node.js'
+    - task: NodeTool@0
+      inputs:
+        versionSpec: '20.x'
+      displayName: 'Install Node.js'
 
-          # Backend Build & Test
-          - script: |
-              cd backend
-              npm install
-              npm test || echo "No tests defined yet"
-            displayName: 'Install & Test Backend'
+    - script: |
+        cd subs_backend
+        npm install
+        npm test || echo "No tests yet"
+      displayName: 'Install & Test Backend'
 
-          # Docker Login using Service Connection (Recommended)
-          # Note: Ensure you created 'MyACRConnection' in Project Settings
-          - task: Docker@2
-            displayName: 'Login to ACR'
-            inputs:
-              containerRegistry: 'MyACRConnection'
-              command: 'login'
+    - task: Docker@2
+      displayName: 'Login to ACR'
+      inputs:
+        containerRegistry: 'MyACRConnection'
+        command: 'login'
 
-          # Build and Push Backend
-          - task: Docker@2
-            displayName: 'Build and Push Backend'
-            inputs:
-              repository: $(imageNameBackend)
-              command: 'buildAndPush'
-              Dockerfile: './subs_backend/Dockerfile'
-              tags: |
-                $(tag)
-                latest
+    - task: Docker@2
+      displayName: 'Build and Push Backend'
+      inputs:
+        repository: $(imageNameBackend)
+        command: 'buildAndPush'
+        Dockerfile: 'subs_backend/Dockerfile'
+        tags: |
+          $(tag)
+          latest
 
-          # Build and Push Frontend
-          - task: Docker@2
-            displayName: 'Build and Push Frontend'
-            inputs:
-              repository: $(imageNameFrontend)
-              command: 'buildAndPush'
-              Dockerfile: './subs_frontend/Dockerfile'
-              tags: |
-                $(tag)
-                latest
+    - task: Docker@2
+      displayName: 'Build and Push Frontend'
+      inputs:
+        repository: $(imageNameFrontend)
+        command: 'buildAndPush'
+        Dockerfile: 'subs_frontend/Dockerfile'
+        tags: |
+          $(tag)
+          latest
