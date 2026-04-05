@@ -20,7 +20,7 @@ stages:
           # 2. Install Node
           - task: NodeTool@0
             inputs:
-              versionSpec: "18.x"
+              versionSpec: "24.x"
 
           # 3. Install backend dependencies
           - script: |
@@ -36,7 +36,7 @@ stages:
 
           # 5. Login to Azure Container Registry
           - script: |
-              echo $(ACR_PASSWORD) | docker login $(registry) -u $(ACR_USERNAME) --password-stdin
+              echo $(env:ACR_PASSWORD) | docker login $(registry) -u $(env:ACR_USERNAME) --password-stdin
             displayName: "Login to ACR"
 
           # 6. Build Backend Image
