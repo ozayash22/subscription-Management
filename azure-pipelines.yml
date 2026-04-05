@@ -43,7 +43,7 @@ stages:
             inputs:
               repository: $(imageNameBackend)
               command: 'buildAndPush'
-              Dockerfile: './backend/Dockerfile'
+              Dockerfile: './subs_backend/Dockerfile'
               tags: |
                 $(tag)
                 latest
@@ -54,7 +54,7 @@ stages:
             inputs:
               repository: $(imageNameFrontend)
               command: 'buildAndPush'
-              Dockerfile: './frontend/Dockerfile'
+              Dockerfile: './subs_frontend/Dockerfile'
               tags: |
                 $(tag)
                 latest
