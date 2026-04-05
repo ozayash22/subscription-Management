@@ -20,7 +20,7 @@ stages:
           # 2. Install Node
           - task: NodeTool@0
             inputs:
-              versionSpec: "24.x"
+              versionSpec: "20.x"
 
           # 3. Install backend dependencies
           - script: |
