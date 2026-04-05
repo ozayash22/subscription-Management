@@ -1,0 +1,22 @@
+version: "3.8"
+
+services:
+  backend:
+    build: ./subs_backend
+    container_name: subs_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - ./subs_backend/.env
+    restart: always
+
+  frontend:
+    build: ./subs_frontend
+    container_name: subs_frontend
+    ports:
+      - "3000:5173"
+    env_file:
+      - ./subs_frontend/.env
+    depends_on:
+      - backend
+    restart: always
