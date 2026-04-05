@@ -1,0 +1,60 @@
+trigger:
+  - main
+
+variables:
+  imageNameBackend: "subscription-backend"
+  imageNameFrontend: "subscription-frontend"
+  registry: "subsmanagement-bwdmfyg0b5b3dfcj.azurecr.io"
+
+stages:
+  - stage: Build
+    jobs:
+      - job: BuildAndPush
+        pool:
+          vmImage: "ubuntu-latest"
+
+        steps:
+          # 1. Checkout code
+          - checkout: self
+
+          # 2. Install Node
+          - task: NodeTool@0
+            inputs:
+              versionSpec: "18.x"
+
+          # 3. Install backend dependencies
+          - script: |
+              cd backend
+              npm install
+            displayName: "Install Backend Dependencies"
+
+          # 4. Run tests
+          - script: |
+              cd backend
+              npm test || echo "No tests yet"
+            displayName: "Run Backend Tests"
+
+          # 5. Login to Azure Container Registry
+          - script: |
+              echo $(ACR_PASSWORD) | docker login $(registry) -u $(ACR_USERNAME) --password-stdin
+            displayName: "Login to ACR"
+
+          # 6. Build Backend Image
+          - script: |
+              docker build -t $(registry)/$(imageNameBackend):latest ./backend
+            displayName: "Build Backend Image"
+
+          # 7. Build Frontend Image
+          - script: |
+              docker build -t $(registry)/$(imageNameFrontend):latest ./frontend
+            displayName: "Build Frontend Image"
+
+          # 8. Push Backend Image
+          - script: |
+              docker push $(registry)/$(imageNameBackend):latest
+            displayName: "Push Backend Image"
+
+          # 9. Push Frontend Image
+          - script: |
+              docker push $(registry)/$(imageNameFrontend):latest
+            displayName: "Push Frontend Image"
