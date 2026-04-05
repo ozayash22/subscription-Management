@@ -5,56 +5,56 @@ variables:
   imageNameBackend: "subscription-backend"
   imageNameFrontend: "subscription-frontend"
   registry: "subsmanagement-bwdmfyg0b5b3dfcj.azurecr.io"
+  tag: '$(Build.BuildId)'
 
 stages:
   - stage: Build
+    displayName: "Build and Push Stage"
     jobs:
       - job: BuildAndPush
         pool:
-          vmImage: "ubuntu-latest"
-
+          name: 'Default' # Points to your WSL Agent
         steps:
-          # 1. Checkout code
           - checkout: self
 
-          # 2. Install Node
           - task: NodeTool@0
             inputs:
-              versionSpec: "18.x"
+              versionSpec: '20.x'
+            displayName: 'Install Node.js'
 
-          # 3. Install backend dependencies
+          # Backend Build & Test
           - script: |
               cd backend
               npm install
-            displayName: "Install Backend Dependencies"
+              npm test || echo "No tests defined yet"
+            displayName: 'Install & Test Backend'
 
-          # 4. Run tests
-          - script: |
-              cd backend
-              npm test || echo "No tests yet"
-            displayName: "Run Backend Tests"
+          # Docker Login using Service Connection (Recommended)
+          # Note: Ensure you created 'MyACRConnection' in Project Settings
+          - task: Docker@2
+            displayName: 'Login to ACR'
+            inputs:
+              containerRegistry: 'MyACRConnection'
+              command: 'login'
 
-          # 5. Login to Azure Container Registry
-          - script: |
-              echo $(ACR_PASSWORD) | docker login $(registry) -u $(ACR_USERNAME) --password-stdin
-            displayName: "Login to ACR"
+          # Build and Push Backend
+          - task: Docker@2
+            displayName: 'Build and Push Backend'
+            inputs:
+              repository: $(imageNameBackend)
+              command: 'buildAndPush'
+              Dockerfile: './backend/Dockerfile'
+              tags: |
+                $(tag)
+                latest
 
-          # 6. Build Backend Image
-          - script: |
-              docker build -t $(registry)/$(imageNameBackend):latest ./backend
-            displayName: "Build Backend Image"
-
-          # 7. Build Frontend Image
-          - script: |
-              docker build -t $(registry)/$(imageNameFrontend):latest ./frontend
-            displayName: "Build Frontend Image"
-
-          # 8. Push Backend Image
-          - script: |
-              docker push $(registry)/$(imageNameBackend):latest
-            displayName: "Push Backend Image"
-
-          # 9. Push Frontend Image
-          - script: |
-              docker push $(registry)/$(imageNameFrontend):latest
-            displayName: "Push Frontend Image"
+          # Build and Push Frontend
+          - task: Docker@2
+            displayName: 'Build and Push Frontend'
+            inputs:
+              repository: $(imageNameFrontend)
+              command: 'buildAndPush'
+              Dockerfile: './frontend/Dockerfile'
+              tags: |
+                $(tag)
+                latest
