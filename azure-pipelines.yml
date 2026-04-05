@@ -2,8 +2,8 @@ trigger:
 - main
 
 variables:
-  imageNameBackend: "subscription-backend"
-  imageNameFrontend: "subscription-frontend"
+  imageNameBackend: "subscription_management-backend"
+  imageNameFrontend: "subscription_management-frontend"
   registry: "subsmanagement-bwdmfyg0b5b3dfcj.azurecr.io"
   tag: '$(Build.BuildId)'
 
