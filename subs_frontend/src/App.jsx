@@ -6,6 +6,8 @@ import Dashboard from "./features/dashboard/Dashboard";
 import PlansPage from "./features/plans/plansPage";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Landing from "./pages/Landing";
+import Success from "./pages/Success";
+import Cancel from "./pages/Cancel";
 
 function App() {
   return (
@@ -15,6 +17,7 @@ function App() {
         <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="*" element={<Landing />} />
 
         {/* Protected */}
         <Route
@@ -34,6 +37,20 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route
+          path="/success"
+          element={<ProtectedRoute>
+              <Success />
+            </ProtectedRoute>}
+        />
+        <Route
+          path="/cancel"
+          element={<ProtectedRoute>
+              <Cancel />
+            </ProtectedRoute>}
+        />
+
       </Routes>
     </BrowserRouter>
   );

@@ -1,7 +1,14 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "./authService";
-import { LogIn, ArrowRight } from "lucide-react"; // npm install lucide-react
+import {
+  Sparkles,
+  LogIn,
+  CheckCircle2,
+  ShieldCheck,
+  Zap,
+  ArrowRight,
+} from "lucide-react";
 
 const Login = () => {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -24,79 +31,127 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex">
-      {/* Left Side: Visual/Branding */}
-      <div className="hidden lg:flex w-1/2 bg-indigo-600 items-center justify-center p-12 relative overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-indigo-500 to-purple-700 opacity-90" />
-        <div className="relative z-10 text-white max-w-md">
-          <h2 className="text-4xl font-bold mb-6">Welcome back to SubTrack.</h2>
-          <p className="text-indigo-100 text-lg">
-            Stop chasing spreadsheets. Start scaling your recurring revenue with 
-            real-time insights.
-          </p>
-        </div>
-        {/* Decorative Circles */}
-        <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-white/10 rounded-full blur-3xl" />
-      </div>
-
-      {/* Right Side: Form */}
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-8 bg-white">
-        <div className="w-full max-w-md">
-          <div className="mb-10 text-center lg:text-left">
-            <h1 className="text-3xl font-bold text-slate-900 mb-2">Login</h1>
-            <p className="text-slate-500">Enter your credentials to access your dashboard.</p>
+    <div className="min-h-screen flex bg-white">
+      {/* Left Side: Branding + Value (same style as Register) */}
+      <div className="hidden lg:flex w-1/3 bg-slate-900 p-12 flex-col justify-between text-white">
+        <div>
+          <div className="flex items-center gap-2 mb-12">
+            <div className="w-8 h-8 bg-indigo-500 rounded-lg flex items-center justify-center">
+              <span className="font-bold">S</span>
+            </div>
+            <span className="text-xl font-bold tracking-tight">SubTrack</span>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <div>
-              <label className="block text-sm font-medium text-slate-700 mb-1">Email Address</label>
-              <input
-                type="email"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                placeholder="name@company.com"
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-            </div>
+          <h2 className="text-3xl font-bold mb-8">
+            Welcome back. Keep your recurring revenue under control.
+          </h2>
 
-            <div>
-              <div className="flex justify-between mb-1">
-                <label className="block text-sm font-medium text-slate-700">Password</label>
-                <a href="#" className="text-xs text-indigo-600 hover:underline">Forgot?</a>
+          <div className="space-y-6">
+            <FeatureItem
+              icon={<Zap className="text-amber-400" size={20} />}
+              title="Real-Time Insights"
+              desc="Track billing health, MRR, and subscription trends instantly."
+            />
+            <FeatureItem
+              icon={<CheckCircle2 className="text-emerald-400" size={20} />}
+              title="Reliable Billing Flows"
+              desc="Checkout, upgrades, and cancellations synced via Stripe webhooks."
+            />
+            <FeatureItem
+              icon={<ShieldCheck className="text-indigo-400" size={20} />}
+              title="Secure by Design"
+              desc="JWT-protected APIs and verified webhook signatures for trust."
+            />
+          </div>
+        </div>
+
+        <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+          <p className="text-sm text-slate-300 italic">
+            "SubTrack made our billing workflows clear, fast, and reliable."
+          </p>
+          <p className="text-sm font-bold mt-3 text-white">— Alex Rivera, Founder at Recurrly</p>
+        </div>
+      </div>
+
+      {/* Right Side: Login Form */}
+      <div className="w-full lg:w-2/3 flex items-center justify-center p-8 bg-slate-50/50">
+        <div className="w-full max-w-md">
+          <div className="mb-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-bold mb-4">
+              <Sparkles size={12} />
+              ACCESS YOUR BILLING DASHBOARD
+            </div>
+            <h1 className="text-4xl font-black text-slate-900 mb-2">Login</h1>
+            <p className="text-slate-500">Welcome back. Continue managing plans and subscriptions.</p>
+          </div>
+
+          <form onSubmit={handleLogin} className="space-y-4">
+            <div className="grid grid-cols-1 gap-4">
+              <div className="space-y-1">
+                <label className="text-sm font-semibold text-slate-700 ml-1">Work Email</label>
+                <input
+                  type="email"
+                  required
+                  placeholder="john@company.com"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition bg-white"
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
+                />
               </div>
-              <input
-                type="password"
-                required
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 focus:border-transparent outline-none transition"
-                placeholder="••••••••"
-                onChange={(e) => setForm({ ...form, password: e.target.value })}
-              />
+
+              <div className="space-y-1">
+                <div className="flex justify-between items-center ml-1">
+                  <label className="text-sm font-semibold text-slate-700">Password</label>
+                  <button
+                    type="button"
+                    className="text-xs text-indigo-600 hover:underline"
+                    onClick={() => alert("Forgot password flow can be added in next step.")}
+                  >
+                    Forgot password?
+                  </button>
+                </div>
+                <input
+                  type="password"
+                  required
+                  placeholder="Your password"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:ring-2 focus:ring-indigo-500 outline-none transition bg-white"
+                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                />
+              </div>
             </div>
 
             <button
               disabled={loading}
-              className="w-full bg-slate-900 hover:bg-slate-800 text-white font-bold py-3 px-4 rounded-xl transition-all flex items-center justify-center gap-2 group"
+              className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 rounded-xl transition shadow-lg shadow-indigo-200 flex items-center justify-center gap-2 group"
             >
-              {loading ? "Signing in..." : "Sign In"}
-              <LogIn size={18} className="group-hover:translate-x-1 transition-transform" />
+              {loading ? "Signing In..." : "Sign In"}
+              <LogIn size={18} className="group-hover:scale-110 transition-transform" />
             </button>
           </form>
 
-          {/* Unique Navigation to Register */}
-          <div className="mt-8 pt-8 border-t border-slate-100 text-center">
-            <p className="text-slate-600 mb-4">New to SubTrack?</p>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-2 text-indigo-600 font-semibold hover:text-indigo-700 transition group"
-            >
-              Create a free account 
-              <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-            </Link>
+          {/* Navigation to Register */}
+          <div className="mt-8 text-center">
+            <p className="text-slate-500">
+              New to SubTrack?{" "}
+              <Link to="/register" className="text-indigo-600 font-bold hover:underline decoration-2 underline-offset-4 inline-flex items-center gap-1">
+                Create account
+                <ArrowRight size={14} />
+              </Link>
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 };
+
+const FeatureItem = ({ icon, title, desc }) => (
+  <div className="flex gap-4">
+    <div className="mt-1">{icon}</div>
+    <div>
+      <h4 className="font-bold text-white">{title}</h4>
+      <p className="text-sm text-slate-400 leading-relaxed">{desc}</p>
+    </div>
+  </div>
+);
 
 export default Login;

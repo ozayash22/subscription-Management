@@ -5,11 +5,31 @@ const paymentSchema = new mongoose.Schema(
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
+      default: null,
+      index: true,
     },
-    amount: Number,
-    status: String,
-    stripePaymentIntentId: String,
-    invoiceId: String,
+    amount: {
+      type: Number,
+      required: true,
+      min: 0,
+    },
+    status: {
+      type: String,
+      enum: ["succeeded", "failed", "pending"],
+      required: true,
+    },
+    stripePaymentIntentId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
+    invoiceId: {
+      type: String,
+      unique: true,
+      sparse: true,
+      index: true,
+    },
   },
   { timestamps: true }
 );
