@@ -7,6 +7,7 @@ const planRoutes = require("./src/routes/planRoutes");
 const subscriptionRoutes = require("./src/routes/subscriptionRoutes");
 const webhookRoutes = require("./src/routes/webhookRoutes");
 const analyticsRoutes = require("./src/routes/analyticsRoutes");
+const client = require("prom-client");
 
 dotenv.config();
 
@@ -33,7 +34,27 @@ app.use("/api/plans", planRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/analytics", analyticsRoutes);
 
-// app.use(express.json());
+
+// Create default metrics
+client.collectDefaultMetrics();
+
+// Create custom metrics (optional)
+const httpRequestCounter = new client.Counter({
+  name: "http_requests_total",
+  help: "Total number of HTTP requests",
+});
+
+// Middleware to count requests
+app.use((req, res, next) => {
+  httpRequestCounter.inc();
+  next();
+});
+
+// Metrics endpoint
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
+});
 
 // Start server
 const PORT = process.env.PORT || 5000;
