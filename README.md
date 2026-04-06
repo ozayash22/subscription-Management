@@ -102,6 +102,6 @@ npm run dev
 ```bash
 stripe listen --forward-to localhost:5000/api/webhooks/stripe
 ```
-### Copy the generated webhook signing secret and set STRIPE_WEBHOOK_SECRET in backend .env, then restart backend.
+# Copy the generated webhook signing secret and set STRIPE_WEBHOOK_SECRET in backend .env, then restart backend.
 
 
