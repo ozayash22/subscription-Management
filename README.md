@@ -86,22 +86,22 @@ npm install
 cd ../subs_frontend
 npm install
 ```
-##2) Run backend
+### 2) Run backend
 ```bash
 cd subs_backend
 npm run dev
 ```
 
-#3) Run frontend
+#### 3) Run frontend
 ```bash
 cd subs_frontend
 npm run dev
 ```
 
-#4) Start Stripe webhook listener
+#### 4) Start Stripe webhook listener
 ```bash
 stripe listen --forward-to localhost:5000/api/webhooks/stripe
 ```
-###Copy the generated webhook signing secret and set STRIPE_WEBHOOK_SECRET in backend .env, then restart backend.
+### Copy the generated webhook signing secret and set STRIPE_WEBHOOK_SECRET in backend .env, then restart backend.
 
 
