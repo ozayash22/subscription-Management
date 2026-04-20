@@ -59,7 +59,7 @@ const Landing = () => {
               </Link>
               <button
                 onClick={logoutUser}
-                className="inline-flex items-center gap-2 border border-red-200 text-red-600 hover:bg-red-50 px-4 py-2 rounded-xl text-sm font-semibold transition"
+                className="inline-flex items-center gap-2 border border-red-200 text-red-600 hover:bg-blue-50 px-4 py-2 rounded-xl text-sm font-semibold transition"
               >
                 <LogOut size={14} />
                 Logout
